@@ -13,7 +13,7 @@ A resilient Python tool designed to convert a folder of images into a single PDF
 
 1.  Clone the repository:
     ```bash
-    git clone [https://github.com/KULLANICI_ADIN/robust-image-to-pdf.git](https://github.com/KULLANICI_ADIN/robust-image-to-pdf.git)
+    git clone [https://github.com/NevfelEmre/robust-image-to-pdf.git](https://github.com/KULLANICI_ADIN/robust-image-to-pdf.git)
     ```
 2.  Place your images inside the `images` folder.
 3.  Double-click **`start.bat`**.
