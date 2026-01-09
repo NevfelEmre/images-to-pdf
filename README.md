@@ -17,7 +17,8 @@ A resilient Python tool designed to convert a folder of images into a single PDF
     ```
 2.  Place your images inside the `images` folder.
 3.  Double-click **`start.bat`**.
-
+OR
+Use .exe instead of .py and .bat
 That's it! The script will:
 * Create a virtual environment (if not exists).
 * Install required packages (`Pillow`, `natsort`).
