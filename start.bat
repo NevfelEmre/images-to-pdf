@@ -1,32 +1,4 @@
-@echo off
-TITLE PDF Birlestirici - Kurulum ve Baslatma
 
-echo ---------------------------------------------------
-echo PDF Birlestirici Baslatiliyor...
-echo ---------------------------------------------------
-
-:: 1. Python Yüklü mü Kontrolü
-python --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [HATA] Python bilgisayarda yuklu degil veya PATH'e ekli degil!
-    echo Lutfen Python'u kurup tekrar deneyin.
-    pause
-    exit
-)
-
-:: 2. VENV Kontrolü ve Kurulumu
-if exist "venv" (
-    echo [BILGI] Sanal ortam (venv) bulundu.
-) else (
-    echo [UYARI] Sanal ortam bulunamadi. Olusturuluyor...
-    python -m venv venv
-    if %errorlevel% neq 0 (
-        echo [HATA] Venv olusturulamadi!
-        pause
-        exit
-    )
-    echo [OK] Venv basariyla olusturuldu.
-)
 
 :: 3. VENV Aktivasyonu
 call venv\Scripts\activate

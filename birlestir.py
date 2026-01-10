@@ -1,5 +1,5 @@
 import os
-from PIL import Image, ImageFile
+from PIL import Image, ImageFile, ImageOps # ImageOps eklendi
 from natsort import natsorted
 
 # Yarım inmiş dosyaları okumaya zorla
@@ -25,12 +25,11 @@ if not sirali_dosyalar:
     print("HATA: Dosya bulunamadı!")
     exit()
 
-print(f"Toplam {len(sirali_dosyalar)} dosya bulundu. Temizlenerek belleğe alınıyor...")
+print(f"Toplam {len(sirali_dosyalar)} dosya bulundu. Yönler düzeltilerek işleniyor...")
 
 imagelist = []
 first_image = None 
 
-# RAM şişmemesi için resimleri optimize ederek açacağız
 for i, dosya_adi in enumerate(sirali_dosyalar):
     tam_yol = os.path.join(img_folder, dosya_adi)
     
@@ -38,24 +37,26 @@ for i, dosya_adi in enumerate(sirali_dosyalar):
         # 1. Resmi aç
         img = Image.open(tam_yol)
         
-        # 2. Renk modunu RGB yap
+        # 2. YENİ ÖZELLİK: EXIF verisine bakıp resmi fiziksel olarak döndür
+        # Bu satır, yan duran fotoları olması gereken dik konuma getirir.
+        img = ImageOps.exif_transpose(img)
+        
+        # 3. Renk modunu RGB yap
         if img.mode != 'RGB':
             img = img.convert('RGB')
         
-        # 3. SİHİRLİ DOKUNUŞ: Resmi sıfır bir tuvale kopyala
-        # Bu işlem dosyanın bozuk metadata/header bilgilerini siler.
+        # 4. Temiz tuvale kopyala (Bozuk header sorununu çözmek için)
         clean_img = Image.new("RGB", img.size)
         clean_img.paste(img)
         
-        # 4. Listeye ekle
+        # 5. Listeye ekle
         if first_image is None:
             first_image = clean_img
         else:
             imagelist.append(clean_img)
             
-        # İlerleme çubuğu
         if i % 20 == 0:
-            print(f"Temizlenen: {i+1}/{len(sirali_dosyalar)}")
+            print(f"Düzeltilen: {i+1}/{len(sirali_dosyalar)}")
             
     except Exception as e:
         print(f"\nATLANDI: {dosya_adi} - Sebep: {e}")
@@ -63,9 +64,8 @@ for i, dosya_adi in enumerate(sirali_dosyalar):
 print("-" * 30)
 
 if first_image:
-    print(f"Tüm dosyalar temizlendi. PDF yazılıyor (Bu işlem birkaç saniye sürebilir)...")
+    print(f"PDF yazılıyor... ({len(imagelist) + 1} sayfa)")
     try:
-        # Kaydederken 'JPEG' formatını zorlamıyoruz, Pillow kendi halletsin
         first_image.save(
             output_pdf_name, 
             "PDF", 
